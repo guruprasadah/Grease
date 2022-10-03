@@ -15,7 +15,10 @@ int main() {
     // Create main ticker
     Grease::Time::Ticker Ticker(10, Tick);
 
-    //Grease::GFX::Mesh Mesh = Grease::GFX::Mesh::Create("ASSET://Doomguy.asset");
+    Grease::GFX::Mesh Mesh = Grease::GFX::Mesh::Create("ASSET://Doomguy.asset");
+
+    Grease::GFX::Mesh& MeshRef = Grease::GFX::Mesh::Get("Doomguy");
+    Grease::Log(MeshRef.ID);
 
     while(Window.Open()) {
         Window.ProcessEvents();

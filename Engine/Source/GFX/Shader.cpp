@@ -93,5 +93,9 @@ namespace Grease {
 
             return s;
         }
+
+        Shader& Shader::Get(const String& _Name) {
+            return ShaderList.at(_Name);
+        }
     };
 };

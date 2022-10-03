@@ -11,6 +11,7 @@
 #include <cinttypes>
 #include <unordered_map>
 #include <fstream>
+#include <cstring>
 
 using namespace std::string_view_literals;
 
@@ -27,6 +28,7 @@ public:
 
 struct ModelHeader {
     std::uint32_t Header;
+
     std::uint64_t VertexCount;
     std::uint64_t IndexCount;
 };
@@ -127,7 +129,20 @@ int main(int argc, char* argv[]) {
                 std::ofstream Stream(argv[2] + std::string("\\") + static_cast<std::string>(ID) + ".asset");
                 //std::cout << argv[2] + static_cast<std::string>(ID) + ".asset" << std::endl;
 
-                Stream.write(reinterpret_cast<char*>(&Header), sizeof(ModelHeader));
+                Stream.write(reinterpret_cast<char*>(&Header.Header), sizeof(std::uint32_t));
+
+                char IDStr[ID.length()];
+                for(int i = 0; i <= ID.length(); i++) {
+                    IDStr[i] = ID[i];
+                }
+
+                std::uint32_t Length = ID.length();
+                Stream.write(reinterpret_cast<char*>(&Length), sizeof(std::uint32_t));
+                Stream.write(IDStr, Length);
+
+                Stream.write(reinterpret_cast<char*>(&Header.VertexCount), sizeof(std::uint64_t));
+                Stream.write(reinterpret_cast<char*>(&Header.IndexCount), sizeof(std::uint64_t));
+
                 for(auto v : Vertices) {
                     Stream.write(reinterpret_cast<char*>(v.Position.data()), sizeof(float) * 3);
                     Stream.write(reinterpret_cast<char*>(v.Normal.data()), sizeof(float) * 3);
